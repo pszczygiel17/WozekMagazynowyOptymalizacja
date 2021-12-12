@@ -1,17 +1,18 @@
 import numpy as np
 import random
 
+temp0 = 1000            # start temperature from literature
+tempEnd = 0.1           # end temperature
+beta = temp0 / 10000    # linear cooling parameter
+alpha = 0.95            # geometric cooling parameter
+typeReduce = "geo"      # geo/lin/log
+
 class Algorithms():
-    def __init__(self, matrixDistances, capacity, numPoints, basePosition, temp0, tempEnd, beta, alpha, L):
+    def __init__(self, matrixDistances, capacity, numPoints, basePosition):
         self.matrixDistances = matrixDistances
         self.capacity = capacity
         self.numPoints = numPoints
         self.basePosition = basePosition
-        self.temp0 = temp0
-        self.tempEnd = tempEnd
-        self.beta = beta
-        self.alpha = alpha
-        self.L = L
 
     # the function that returns the total distance for the given permutation
     def calculateDistance(self, sequence):
@@ -66,24 +67,24 @@ class Algorithms():
     def reduceTemp(self, T, iteration, typeReduce):
         temp = 0
         if typeReduce == "lin":
-            temp = T - self.beta
+            temp = T - beta
         elif typeReduce == "geo":
-            temp = T * self.alpha
+            temp = T * alpha
         elif typeReduce == "log":
             T / np.log(iteration + 1)
         return temp
 
    
     # simulated annealing algorithm, returns tuple (total distance, permutation)
-    def simAnnealing(self, typeReduce):
+    def simAnnealing(self):
         points = [x for x in range(self.numPoints)]
-        t0 = self.temp0   # start temperature
-        tEnd = self.tempEnd   # end temperature
+        t0 = temp0   # start temperature
+        tEnd = tempEnd   # end temperature
         permutation = self.greedyAlg()  # initial permutation from the greedy algorithm
         distance = self.calculateDistance(permutation)  # initial distance from the greedy algorithm
         numIter = 1 # iteration number
         while t0 > tEnd:        # until the temperature drops to tEnd
-            for i in range(1, self.L):  
+            for i in range(1, self.numPoints):  
                 pos1, pos2 = random.sample([x for x in points if x != self.basePosition], 2)   # random points to swap
                 #pos1, pos2 = random.sample(points,2)
                 newPermutation = self.swap(pos1, pos2, permutation)
