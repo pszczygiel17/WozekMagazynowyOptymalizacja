@@ -4,6 +4,8 @@ from scipy.spatial import distance_matrix
 import math
 from itertools import groupby
 
+from algorithms import Algorithms
+
 
 simBackgroundColor = (99, 99, 99)
 interBackgroundColor = (0, 0, 0)
@@ -59,7 +61,7 @@ class Window():
             self.win.blit(text,(x[0] - 0.4*pointWidth, x[1]))
             num += 1
 
-    def showArrangement(self, permutation, colors):
+    def showArrangement(self, permutation, colors, alg):
         i = 0
         font = pygame.font.SysFont('Comic Sans MS', 16)
         title = font.render("Tasks:", True, textColor)
@@ -68,10 +70,12 @@ class Window():
         for x in groups:
             nr = font.render(str(i+1), True, textColor)
             text = font.render(str(x), True, textColor)
+            distance = font.render(str(round(alg.calculateDistance([0] + x + [0]), 2)), True, textColor)
             self.win.blit(nr, (self.winSim.get_width() + 20, 290 + i*text.get_height()))
             pygame.draw.rect(self.win, list(colors.keys())[i % len(colors)], 
-                pygame.Rect(self.winSim.get_width() + 60, 290 + (i+0.5)*text.get_height(), 50, 3))
-            self.win.blit(text,(self.winSim.get_width() + 150, 290 + i*text.get_height()))
+                pygame.Rect(self.winSim.get_width() + 40, 290 + (i+0.5)*text.get_height(), 30, 3))
+            self.win.blit(text,(self.winSim.get_width() + 90, 290 + i*text.get_height()))
+            self.win.blit(distance, (self.winSim.get_width() + 90 + text.get_width() + 20, 290 + i*text.get_height()))
             i += 1
 
 

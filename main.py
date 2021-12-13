@@ -171,7 +171,7 @@ def main():
 
         p.setPath(permAnnealing[1])
         p.showDistance(permAnnealing[0])
-        p.showArrangement(permAnnealing[1], colors)
+        p.showArrangement(permAnnealing[1], colors, alg)
 
         length = len(p.path) - 1
         i = 1
